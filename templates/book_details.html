@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block heading %}
+	This is what we have about the book you want.
+{% endblock %}
+
+{% block body %}
+
+<h2> {{ book_info[3] }} </h2>
+
+
+<h5> "ISBN: " {{book_info[1]}} </h5>
+<h5> "Book's Name: " {{book_info[2]}} </h5>
+<h5> "Author's Info: " {{book_info[3]}} </h5>
+<h5> "Published Year: "{{book_info[4]}} </h5>
+
+
+<h2> {{% for review in book_reviews %}} </h2>
+
+<h5> {{ review[0] }} </h5>
+<h5> {{ review[1] }} </h5>
+
+
+
+
+
+
+<!-- We want to make sure that we can supply the book id to the books details in the main program hence we supply it to
+the function using the form in this page below. -->
+
+
+
+
+{% endblock %}

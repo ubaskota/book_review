@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block heading %}
+	Welcome to the Reader's Club!!!
+{% endblock %}
+
+{% block body %}
+	
+	<h1>{{ message }}</h1>
+
+	Glad you are here, Reader!!!
+
+	You can search for the books you like to read. <br/>
+	Please don't forget to rate and review the boooks you've already finished reading.
+
+
+	<form action="{{ url_for('search') }}" method="post">
+
+	<div class="form-group">
+	<label><h5>You can search using ISBN, Author, Book, Published Year.</h5></label>
+	<input class="form-control" name="search_tag" size="40" placeholder="Search here">
+	</div>
+
+	<div class="form-group">
+	<button class="btn btn-primary">Search</button>
+	</div>
+
+	<h5> please click <a href="{{ url_for('logout_user') }}"> HERE </a> to log out </h5>
+
+
+	
+
+
+{% endblock %}

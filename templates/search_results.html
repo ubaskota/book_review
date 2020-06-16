@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block heading %}
+	This is what we got for you.
+{% endblock %}
+
+{% block body %}
+
+<h3> {{page_title}}</h3>
+
+{%for book in samples%}
+	<h4>Book's Name: {{book.title}} </h4>
+	<h4> Author: {{book.author}} </h4>
+	<h4> Published Year: {{book.publish_year}} </h4>
+	<h4> ISBN: {{book.isbn_num}} </h4>
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+
+<form action="{{ url_for('post_review') }}" method="post">
+<label><h5>You can post a review if you've finished reading the book.</h5></label>
+<div class="form-group">
+<label>Book's isbn</label>
+<input class="form-control" name="book_isbn" placeholder="book's isbn">
+</div>
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+<div class="form-group">
+<label >Thoughts </label>
+<input type="review" class="form-control" style="width: 300px; height: 150px" name="thoughts" placeholder="Your thoughts about the book">
+</div>
+</div>
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+<div class="form-group">
+<button class="btn btn-primary">Post Review</button>
+</div>
+</form>
+<h3> Please click <a href="{{ url_for('search') }}"> HERE </a> to search another book. </h5>
+<h5> please click <a href="{{ url_for('logout_user') }}"> HERE </a> to log out </h5>
+{%else%}
+	<h4> We were unable to find the book. Please modify your search and try again. </h4>
+	<h2> Click <a href="{{ url_for('login_submit') }}> here to search again." > </a> </h2>
+{%endfor%}
+{% endblock %}

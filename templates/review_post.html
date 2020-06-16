@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block heading %}
+	You've submitted your review!
+{% endblock %}
+
+{% block body %}
+
+<h3> {{page_title}}</h3>
+
+
+<h4>Congratulations!!! Your review for the book, {{ message }} has been posted.</h4>
+<h5>This review will help other readers filter out the book they want to read.</h5>
+	
+
+<h3> Please click <a href="{{ url_for('search') }}"> HERE </a> to search another book. </h5>
+
+
+<h5> please click <a href="{{ url_for('logout_user') }}"> HERE </a> to log out </h5>
+
+
+{% endblock %}
