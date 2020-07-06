@@ -28,10 +28,7 @@
 
 <form action="{{ url_for('post_review') }}" method="post">
 <label><h5>You can post a review if you've finished reading the book.</h5></label>
-<div class="form-group">
-<label>Book's isbn</label>
-<input class="form-control" name="book_isbn" placeholder="book's isbn">
-</div>
+
 &nbsp;
 &nbsp;
 &nbsp;
@@ -53,6 +50,8 @@
 <button class="btn btn-primary">Post Review</button>
 </div>
 </form>
+
+<h3> Please click <a href="{{ url_for('further_info') }}"> HERE </a> to look for additional reviews of the book. </h5>
 <h3> Please click <a href="{{ url_for('search') }}"> HERE </a> to search another book. </h5>
 <h5> please click <a href="{{ url_for('logout_user') }}"> HERE </a> to log out </h5>
 {%else%}

@@ -4,6 +4,7 @@ from flask import Flask, render_template, session, request, flash, redirect, url
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+import json
 
 
 
@@ -28,6 +29,9 @@ db = scoped_session(sessionmaker(bind=engine))
 # def index():
 # 	#flights = db.execute("SELECT * FROM login_signup").fetchall()
 # 	return render_template("index.html")
+
+class Book():
+	info = ""
 
 
 
@@ -69,7 +73,6 @@ def registration_login():
 def login():
 	# print(session['username'])
 	return render_template("login.html")
-
 
 
 
@@ -119,17 +122,25 @@ def search():
 	elif session != None:
 		if request.method == 'POST':
 			search = str(request.form.get('search_tag'))
-			search = search.lower()
-			search_input = '%' + search + '%'
-
-			if search == None:
-				message = "The search Field can't be empty!"
+			if len(search) == 0:
+				message = "The search Field can't be empty! \n Please, go back and try again."
 				return render_template("error.html", message=message)
-				#Add exception try/except statement
-			else:
+			bookInfo = search = search.lower()
+			search_input1 = '%' + bookInfo + '%'
+			print("This is search_input1 in search {}".format(search_input1))
+			try:
+				Book.info = db.execute("SELECT isbn_num FROM books_des WHERE (LOWER(title) LIKE :search_term OR LOWER(author) LIKE :search_term\
+					OR isbn_num LIKE :search_term OR publish_year LIKE :search_term)", {"search_term":search_input1}).fetchone()[0]
+				print("This is the value of book.info in search {}".format(Book.info))
+
+				search_input = '%' + search + '%'
+
 				results = db.execute("SELECT * FROM books_des WHERE (LOWER(title) LIKE :search_term OR LOWER(author) LIKE :search_term\
-				OR isbn_num LIKE :search_term OR publish_year LIKE :search_term)", {"search_term":search_input}).fetchall()
+					OR isbn_num LIKE :search_term OR publish_year LIKE :search_term)", {"search_term":search_input}).fetchall()
 				return render_template('search_results.html', samples=results, page_title="Search Results:")
+			except Exception:
+				message = "There was an error while looking for the book. Please make sure the information is correct."
+				return render_template("error.html", message=message)
 		else:
 			message = "You can search as many times as you want!"
 			return render_template('welcome.html', message=message)
@@ -145,18 +156,20 @@ def post_review():
 		message = "Please, login again!"
 		return render_template("login.html", message=message)
 
-	elif session != None:
+	elif session['username'] != None:
 		if request.method == 'POST':
 			try:
 				username = session['username']
 			except Exception as e:
 				print("Error, please fix the error")
 			print(session['username'])
-			#username = session['username']
-			isbn_num = request.form.get('book_isbn')
+			username = session['username']
+			print("This is the value of book.info in post_review {}".format(Book.info))
+			# isbn_num = Book.info
+			partial_isbn_num = '%' + Book.info + '%'
+			isbn_num = db.execute("SELECT isbn_num FROM books_des WHERE isbn_num LIKE :search_term", {"search_term":partial_isbn_num}).fetchone()[0]
+
 			review = request.form.get('thoughts')
-			print(isbn_num)
-			print(review)
 			if username != None and isbn_num != None and review != None:
 				db.execute('INSERT INTO book_reviews (username, isbn_num, review) VALUES(:username, :isbn_num, :review)',{'username':username, 'isbn_num':isbn_num, 'review':review})
 				db.commit()
@@ -171,6 +184,50 @@ def post_review():
 
 
 
+
+@app.route("/what_internet_says", methods = ["POST", "GET"])
+def further_info():
+
+	if 'username' not in session:
+		message = "Please, login again!"
+		return render_template("login.html", message=message)
+
+	elif session['username'] != None:
+		if request.method == 'GET':
+			#if temp_book[0].isdigit() == True:  #Search using isbn number if the user searched using isbn number
+			#temp_book.replace('X', '0')
+			print("This is the value of book.info in further_info {}".format(Book.info))
+			partial_isbn_num = '%' + Book.info + '%'
+			isbn_num = db.execute("SELECT isbn_num FROM books_des WHERE isbn_num LIKE :search_term", {"search_term":partial_isbn_num}).fetchone()
+			isbn_num = isbn_num[0]
+			print("The length of isbn_number {}".format(len(isbn_num)))
+			print("This is the isbn_num {}".format(isbn_num))
+			print("This is the data type {}".format(type(isbn_num)))
+			# isbn_num2 = "000723368X"
+			# print("This is the isbn_num22 {}".format(isbn_num2))
+			key = "0btYdD1jhJpVpufLUQ33SA"
+			url = "https://www.goodreads.com/book/review_counts.json"
+			#query = requests.get(url, params={"key": key, "isbn_num": isbn_num})
+			query = requests.get(url, params={"key": key, "isbns": isbn_num})
+			print("This is the RESPONSE {}".format(query.status_code))
+			response = query.json()
+			print(response)
+
+			bookInfo = response['books'][0]
+
+			book_name = db.execute('SELECT title FROM books_des WHERE isbn_num=:isbn_num', {'isbn_num':isbn_num}).fetchone()
+			bookInfo['name'] = book_name[0]
+			all_reviews = db.execute('SELECT review FROM book_reviews WHERE isbn_num=:isbn_num', {'isbn_num':isbn_num}).fetchone()
+			#print(all_reviews)
+
+			return render_template("internet_says.html", bookInfo = bookInfo, all_reviews = all_reviews, )
+
+		else:
+			message = "Something is wrong"
+			return render_template("error.html", message=message)
+
+	else:
+		return render_template('login.html')
 
 
 

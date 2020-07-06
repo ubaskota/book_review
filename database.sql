@@ -15,7 +15,6 @@ CREATE TABLE books_des(
 CREATE TABLE book_reviews(
 	username VARCHAR NOT NULL,
 	isbn_num VARCHAR NOT NULL,
-	rating INT NOT NULL,
 	review VARCHAR NOT NULL,
 	);
 

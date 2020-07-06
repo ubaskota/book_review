@@ -7,9 +7,10 @@
 {% block body %}
 	
 	Error!
-	<h1>{{ message }}</h1>
+	<h2><p style="color:red;">{{ message }} </p></h2>
 
-
+<h3> Please click <a href="{{ url_for('search') }}"> HERE </a> to search another book. </h5>
+<h5> please click <a href="{{ url_for('logout_user') }}"> HERE </a> to log out </h5>
 
 	
 
