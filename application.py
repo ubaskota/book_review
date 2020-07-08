@@ -99,6 +99,9 @@ def login_submit():
 
 @app.route("/logout", methods = ["POST", "GET"])
 def logout_user():
+	if 'username' not in session:
+		message = "You're not logged in to log out. Please log in or create a new account"
+		return render_template("login.html", message=message)
 	session.pop('username', None)
 	flash('You are successfully logged out.')
 	# return render_template("login.html")
