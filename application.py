@@ -23,8 +23,8 @@ Session(app)
 
 # Set up database
 engine = create_engine(os.getenv("DATABASE_URL"))
-db = SQL(os.environ["DATABASE_URL"])
-# db = scoped_session(sessionmaker(bind=engine))
+# db = SQL(os.environ["DATABASE_URL"])
+db = scoped_session(sessionmaker(bind=engine))
 
 # @app.route("/")
 # def index():
