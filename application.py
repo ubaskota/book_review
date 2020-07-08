@@ -23,7 +23,8 @@ Session(app)
 
 # Set up database
 engine = create_engine(os.getenv("DATABASE_URL"))
-db = scoped_session(sessionmaker(bind=engine))
+db = SQL(os.environ["DATABASE_URL"])
+# db = scoped_session(sessionmaker(bind=engine))
 
 # @app.route("/")
 # def index():
@@ -141,6 +142,8 @@ def search():
 			except Exception:
 				message = "There was an error while looking for the book. Please make sure the information is correct."
 				return render_template("error.html", message=message)
+
+
 		else:
 			message = "You can search as many times as you want!"
 			return render_template('welcome.html', message=message)
