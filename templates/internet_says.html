@@ -1,25 +1,29 @@
 {% extends "layout.html" %}
 
 {% block heading %}
-	This is what we got for you.
+	..........Result.............
 {% endblock %}
 
 {% block body %}
 
 <h3> {{page_title}}</h3>
 <div>
-    <h1>{{bookInfo['title']}}</h1>
-    <h5>Book Name: {{bookInfo['name']}}</h5>
-    <h5>Total Reviews: {{bookInfo['text_reviews_count']}}</h5>
-    <h5>ISBN-10: {{bookInfo['isbn']}}</h5>
-    <h5>Average Rating: {{bookInfo['average_rating']}}</h5>
-    <h5>Total Reviews: {{bookInfo['text_reviews_count']}} </h5>
+    <h2>Book Name: {{bookInfo['name']}}</h2>
+    <h3>Total Reviews: {{bookInfo['text_reviews_count']}}</h3>
+    <h3>ISBN-10: {{bookInfo['isbn']}}</h3>
+    <h3>Average Rating: {{bookInfo['average_rating']}}</h3>
+    <h3>Total Reviews: {{bookInfo['text_reviews_count']}} </h3>
 </div>
 
+{% if all_reviews %}
 <div>
     <h1>All Reviews</h1>
-	{%for review in all_reviews%}
-	<h5> {{ review }} </h5>
+    {%for review in all_reviews %}
+    <li>{{ review[0] }} </li>
+    <h4> {{ "|||"}} </h4>
+   	{% endfor %}
+<!--     {{ all_reviews }} -->
+
 
 </div>
 
@@ -31,12 +35,20 @@
 &nbsp;
 &nbsp;
 
+{%else%}
+	<h3><p style="color:red">Nobody has reviewed this book yet. You can be the first person to review this book.</p></h3>
+{% endif%}
 
-
+<h3> Please click <a href="{{ url_for('further_info') }}"> HERE </a> to look for additional reviews of the book. </h5>
 <h3> Please click <a href="{{ url_for('search') }}"> HERE </a> to search another book. </h5>
 <h5> please click <a href="{{ url_for('logout_user') }}"> HERE </a> to log out </h5>
-{%else%}
-	<h4> We were unable to find the book. Please modify your search and try again. </h4>
-	<h2> Click <a href="{{ url_for('login_submit') }}> here to search again."> </a> </h2>
-{%endfor%}
+
+
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
 {% endblock %}

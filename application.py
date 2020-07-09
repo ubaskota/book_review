@@ -129,6 +129,10 @@ def search():
 			if len(search) == 0:
 				message = "The search Field can't be empty! \n Please, go back and try again."
 				return render_template("error.html", message=message)
+			search = search.strip()
+			if search[0].isdigit() or search[-1].isdigit():
+				search.replace('x', "")
+				search.replace('X', "")
 			bookInfo = search = search.lower()
 			search_input1 = '%' + bookInfo + '%'
 			print("This is search_input1 in search {}".format(search_input1))
@@ -223,10 +227,12 @@ def further_info():
 
 			book_name = db.execute('SELECT title FROM books_des WHERE isbn_num=:isbn_num', {'isbn_num':isbn_num}).fetchone()
 			bookInfo['name'] = book_name[0]
-			all_reviews = db.execute('SELECT review FROM book_reviews WHERE isbn_num=:isbn_num', {'isbn_num':isbn_num}).fetchone()
+			all_reviews = db.execute('SELECT review FROM book_reviews WHERE isbn_num=:isbn_num', {'isbn_num':isbn_num}).fetchall()
 			#print(all_reviews)
+			if all_reviews == None:
+				all_reviews = "Nobody has reviewed this book yet. You can be the first person to rate it"
 
-			return render_template("internet_says.html", bookInfo = bookInfo, all_reviews = all_reviews, )
+			return render_template("internet_says.html", bookInfo = bookInfo, all_reviews = all_reviews)
 
 		else:
 			message = "Something is wrong"
